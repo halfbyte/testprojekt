@@ -1,54 +1,68 @@
 require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
-  def test_index
-    get :index
-    assert_template 'index'
+  context "index action" do
+    should "render index template" do
+      get :index
+      assert_template 'index'
+    end
   end
   
-  def test_show
-    get :show, :id => User.first
-    assert_template 'show'
+  context "show action" do
+    should "render show template" do
+      get :show, :id => User.first
+      assert_template 'show'
+    end
   end
   
-  def test_new
-    get :new
-    assert_template 'new'
+  context "new action" do
+    should "render new template" do
+      get :new
+      assert_template 'new'
+    end
   end
   
-  def test_create_invalid
-    User.any_instance.stubs(:valid?).returns(false)
-    post :create
-    assert_template 'new'
+  context "create action" do
+    should "render new template when model is invalid" do
+      User.any_instance.stubs(:valid?).returns(false)
+      post :create
+      assert_template 'new'
+    end
+    
+    should "redirect when model is valid" do
+      User.any_instance.stubs(:valid?).returns(true)
+      post :create
+      assert_redirected_to user_url(assigns(:user))
+    end
   end
   
-  def test_create_valid
-    User.any_instance.stubs(:valid?).returns(true)
-    post :create
-    assert_redirected_to user_url(assigns(:user))
+  context "edit action" do
+    should "render edit template" do
+      get :edit, :id => User.first
+      assert_template 'edit'
+    end
   end
   
-  def test_edit
-    get :edit, :id => User.first
-    assert_template 'edit'
+  context "update action" do
+    should "render edit template when model is invalid" do
+      User.any_instance.stubs(:valid?).returns(false)
+      put :update, :id => User.first
+      assert_template 'edit'
+    end
+  
+    should "redirect when model is valid" do
+      User.any_instance.stubs(:valid?).returns(true)
+      put :update, :id => User.first
+      assert_redirected_to user_url(assigns(:user))
+    end
   end
   
-  def test_update_invalid
-    User.any_instance.stubs(:valid?).returns(false)
-    put :update, :id => User.first
-    assert_template 'edit'
-  end
-  
-  def test_update_valid
-    User.any_instance.stubs(:valid?).returns(true)
-    put :update, :id => User.first
-    assert_redirected_to user_url(assigns(:user))
-  end
-  
-  def test_destroy
-    user = User.first
-    delete :destroy, :id => user
-    assert_redirected_to users_url
-    assert !User.exists?(user.id)
+  context "destroy action" do
+    should "destroy model and redirect to index action" do
+      user = User.first
+      delete :destroy, :id => user
+      assert_redirected_to users_url
+      assert !User.exists?(user.id)
+    end
   end
 end

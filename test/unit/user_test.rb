@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
-  def test_should_be_valid
+  should "be valid" do
     assert User.new.valid?
   end
 end
